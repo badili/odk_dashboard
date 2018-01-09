@@ -4,24 +4,19 @@ import json
 import logging
 import traceback
 import gzip
-import posixpath
 
-from urlparse import unquote
 from cStringIO import StringIO as IO
 
 from django.conf import settings
-from django.contrib.staticfiles import finders
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.views import static
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.middleware import csrf
 
 from wsgiref.util import FileWrapper
 
 from vendor.odk_parser import OdkParser
-from .adgg import ADGG
 from vendor.terminal_output import Terminal
 
 import os
@@ -154,40 +149,6 @@ def update_db(request):
     return HttpResponse(json.dumps({'error': False, 'message': 'Database updated'}))
 
 
-def show_landing(request):
-    csrf_token = get_or_create_csrf_token(request)
-
-    adgg = ADGG()
-    stats = adgg.landing_page_stats()
-    page_settings = {
-        'page_title': "%s | Home" % settings.SITE_NAME,
-        'csrf_token': csrf_token,
-        'section_title': 'ADGG Home',
-        'data': stats
-    }
-    return render(request, 'landing_page.html', page_settings)
-
-
-@login_required(login_url='/login')
-def show_dashboard(request):
-    csrf_token = get_or_create_csrf_token(request)
-
-    adgg = ADGG()
-    try:
-        stats = adgg.system_stats()
-        page_settings = {
-            'page_title': "%s | Home" % settings.SITE_NAME,
-            'csrf_token': csrf_token,
-            'section_title': 'ADGG Overview',
-            'data': stats,
-            'js_data': json.dumps(stats)
-        }
-        return render(request, 'dash_home.html', page_settings)
-    except Exception as e:
-        terminal.tprint('Error! %s' % str(e), 'fail')
-        show_landing(request)
-
-
 # @login_required(login_url='/login')
 def form_structure(request):
     # given a form id, get the structure for the form
@@ -301,30 +262,6 @@ def get_or_create_csrf_token(request):
         request.META['CSRF_COOKIE'] = token
     request.META['CSRF_COOKIE_USED'] = True
     return token
-
-
-def serve_static_files(request, path, insecure=False, **kwargs):
-    """
-    Serve static files below a given point in the directory structure or
-    from locations inferred from the staticfiles finders.
-    To use, put a URL pattern such as::
-        from django.contrib.staticfiles import views
-        url(r'^(?P<path>.*)$', views.serve)
-    in your URLconf.
-    It uses the django.views.static.serve() view to serve the found files.
-    """
-
-    if not settings.DEBUG and not insecure:
-        raise Http404
-    normalized_path = posixpath.normpath(unquote(path)).lstrip('/')
-    absolute_path = finders.find(normalized_path)
-    if not absolute_path:
-        if path.endswith('/') or path == '':
-            raise Http404("Directory indexes are not allowed here.")
-        raise Http404("'%s' could not be found" % path)
-    document_root, path = os.path.split(absolute_path)
-    return static.serve(request, path, document_root=document_root, **kwargs)
-
 
 def manage_mappings(request):
     csrf_token = get_or_create_csrf_token(request)

@@ -527,7 +527,7 @@ BadiliDash.prototype.initiateViewsManagement = function(){
         {'name': 'date_created', 'title': 'Date Created', 'type': 'date'},
         {'name': 'no_sub_tables', 'title': 'Sub Tables'},
         {'name': 'auto_process', 'title': 'Auto Process'},
-        // {'name': 'structure', 'title': 'View Structure'}
+        {'name': 'actions', 'title': 'Actions'}
     ];
 
     ft = FooTable.init('#views_table', {

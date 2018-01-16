@@ -1,7 +1,8 @@
 
+from __future__ import absolute_import
 from django.conf.urls import url
 
-import views
+from . import views
 urlpatterns = [
     url(r'^login$', views.login_page, name='login_page'),
     url(r'^logout$', views.logout_view, name='logout'),

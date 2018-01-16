@@ -1,11 +1,15 @@
 from __future__ import absolute_import  # Python 2 only
 
+from __future__ import print_function
 import json
 import logging
 import traceback
 import gzip
 
-from cStringIO import StringIO as IO
+try:
+    from cStringIO import StringIO as IO
+except ImportError:
+    from io import StringIO as IO
 
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
@@ -143,7 +147,7 @@ def update_db(request):
         parser.update_sdss_db()
     except Exception as e:
         logging.error(traceback.format_exc())
-        print str(e)
+        print(str(e))
         return HttpResponse(traceback.format_exc())
 
     return HttpResponse(json.dumps({'error': False, 'message': 'Database updated'}))
@@ -185,6 +189,8 @@ def download_data(request):
         data = json.loads(request.body)
         res = parser.fetch_merge_data(data['form_id'], data['nodes[]'], data['format'], data['action'], data['view_name'])
     except KeyError as e:
+        terminal.tprint(traceback.format_exc(), 'fail')
+        terminal.tprint(str(e), 'fail')
         response = HttpResponse(json.dumps({'error': True, 'message': str(e)}), content_type='text/json')
         response['Content-Message'] = json.dumps({'error': True, 'message': str(e)})
         return response
@@ -197,15 +203,15 @@ def download_data(request):
 
     if res['is_downloadable'] is True:
         filename = res['filename']
-        wrapper = FileWrapper(file(filename))
+        wrapper = FileWrapper(open(filename))
         response = HttpResponse(wrapper, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(filename)
         response['Content-Length'] = os.path.getsize(filename)
+        os.remove(filename)
     else:
         response = HttpResponse(json.dumps({'error': False, 'message': res['message']}), content_type='text/json')
         response['Content-Message'] = json.dumps({'error': False, 'message': res['message']})
 
-    os.remove(filename)
     return response
 
 
@@ -224,10 +230,10 @@ def download(request):
     except KeyError:
         return HttpResponse(traceback.format_exc())
     except Exception as e:
-        print str(e)
+        print(str(e))
         logging.error(traceback.format_exc())
 
-    wrapper = FileWrapper(file(filename))
+    wrapper = FileWrapper(open(filename))
     response = HttpResponse(wrapper, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(filename)
     response['Content-Length'] = os.path.getsize(filename)

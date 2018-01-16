@@ -14,7 +14,7 @@ except ImportError:
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.middleware import csrf
 
@@ -203,8 +203,9 @@ def download_data(request):
 
     if res['is_downloadable'] is True:
         filename = res['filename']
-        wrapper = FileWrapper(open(filename))
-        response = HttpResponse(wrapper, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        excel_file = open(filename, 'rb')
+        
+        response = HttpResponse(excel_file.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(filename)
         response['Content-Length'] = os.path.getsize(filename)
         os.remove(filename)

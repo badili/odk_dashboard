@@ -1,9 +1,8 @@
 {% extends "base_dashboard.html" %}
 {% block dash_content %}
 
-<div>
-    <link rel="stylesheet" href="{{ static('css/dm_dashboard.css') }}" />
-    <link rel="stylesheet" href="{{ static('bower/footables/compiled/footable.bootstrap.css') }}" />
+<link rel="stylesheet" href="{{ static('css/dm_dashboard.css') }}" />
+<link rel="stylesheet" href="{{ static('bower/footables/compiled/footable.bootstrap.css') }}" />
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -68,17 +67,15 @@
 <!-- FooTable -->
 <script type='text/javascript' src="{{ static('bower/footables/compiled/footable.js') }}"></script>
 <script type="text/javascript" src="{{ static('bower/sweetalert/dist/sweetalert.min.js') }}"></script>
-<script type='text/javascript' src="{{ static('js/adgg.js') }}"></script>
+
+<script type="text/javascript" src="{{ static('bower/jqwidgets/jqwidgets/jqxcore.js') }}"></script>
+<script type="text/javascript" src="{{ static('bower/jqwidgets/jqwidgets/jqxnotification.js') }}"></script>
 
 <script>
     $(document).ready(function(){
-        BadiliDash.data = {};
-
         dash.data = {{ all_data | safe }};
         dash.initiateViewsManagement();
     });
 </script>
-
-</div>
 
 {% endblock %}

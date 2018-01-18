@@ -149,6 +149,8 @@ function BadiliDash() {
     $(document).on('click', '#form_settings_table .edit_form', this.editFormSettings);
     $(document).on('click', '#save_form_details', this.saveFormSettings);
     $(document).on('click', '#save_group_details', this.saveGroupDetails);
+    $(document).on('click', '.refresh_view_data', this.refreshViewData);
+    
 }
 
 BadiliDash.prototype.initiate = function(){
@@ -685,7 +687,7 @@ BadiliDash.prototype.showNotification = function(message, type, autoclose){
     }
     $('#messageNotification .jqx-notification-content div').html(message);
     $('#messageNotification').jqxNotification({template: type});
-   $('#messageNotification').jqxNotification('open');
+    $('#messageNotification').jqxNotification('open');
 };
 
 BadiliDash.prototype.communicationError = function(){
@@ -1635,5 +1637,30 @@ BadiliDash.prototype.saveGroupDetails = function(){
 };
 
 BadiliDash.prototype.refreshFormGroupsTable = function(){};
+
+BadiliDash.prototype.refreshViewData = function(){
+    var view_id = $(this).data('identifier');
+
+    event.preventDefault();
+    console.log('Beginning');
+    $('#spinnermModal').modal('show');
+    $.ajax({
+        type: "POST", url: "/refresh_view_data/", dataType: 'json', data: {'view_id': view_id},
+        error: dash.communicationError,
+        success: function (data) {
+            console.log('End')
+            $('#spinnermModal').modal('hide');
+            if (data.error) {
+                alert(data.message);
+                dash.showNotification('There was an error while refreshing the view data.', 'error', true);
+            } else {
+                // dash.refreshFormGroupsTable(data.group_settings);
+                alert(data.message);
+                dash.showNotification('The views data was refreshed successfully.', 'error', false);
+                // $('#form-group-modal').modal('hide');
+            }
+        }
+    });
+};
 
 var dash = new BadiliDash();

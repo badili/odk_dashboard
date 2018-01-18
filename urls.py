@@ -40,4 +40,5 @@ urlpatterns = [
     url(r'^save_form_details/$', views.save_form_details, name='save_form_details'),
     url(r'^form_groups_info/$', views.form_groups_info, name='form_groups_info'),
     url(r'^save_group_details/$', views.save_group_details, name='save_group_details'),
+    url(r'^refresh_view_data/$', views.refresh_view_data, name='refresh_view_data'),
 ]

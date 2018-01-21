@@ -138,7 +138,7 @@ function BadiliDash() {
     $('#confirm_process_mappings').on('click', this.executeDataProcessor);
     $('#confirm_delete_data').on('click', this.clearProcessedData);
     $('#confirm_save_edits').on('click', this.saveEditedJson);
-    $('#confirm_process_submission').on('click', this.processCurSubmission);
+    $('#confirm_process_submission').unbind('click').on('click', this.processCurSubmission);
     $('#save_sys_settings, #save_db_settings, #save_ona_settings').on('click', this.saveSystemSettings);
     $('#new_form_group').on('click', function(){
         $('#form-group-modal').modal('show');
@@ -1542,6 +1542,8 @@ BadiliDash.prototype.saveFormSettings = function(event){
 };
 
 BadiliDash.prototype.saveSystemSettings = function(event){
+    event.preventDefault();
+    console.log(this.id);
     if(this.id == 'save_sys_settings'){
         var cur_form_id = 'save_settings';
         $("#"+cur_form_id).validate({
@@ -1567,7 +1569,6 @@ BadiliDash.prototype.saveSystemSettings = function(event){
         return;
     }
 
-    event.preventDefault();
     // {'err_id': dash.cur_error_id, 'json_data': JSON.stringify(edited_json)
     $('#spinnermModal').modal('show');
     $.ajax({

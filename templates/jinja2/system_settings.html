@@ -76,7 +76,7 @@
                             <h5>ONA Data Settings</h5>
                         </div>
                         <div class="ibox-content">
-                            <form class="form-horizontal cmxform" id='ona_api' action='/save_ona_settings/' method='POST'>
+                            <form class="form-horizontal cmxform" id='ona_api' method='POST'>
                                 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                                 <div class="form-group"><label class="col-lg-3 control-label" for='ona_url'>URL</label>
                                     <div class="col-lg-9">
@@ -100,7 +100,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-lg-offset-2 col-lg-9">
-                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" id='save_ona_settings' type="submit"><strong>Save</strong></button>
+                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" id='save_ona_settings'><strong>Save</strong></button>
                                     </div>
                                 </div>
                             </form>
@@ -231,7 +231,7 @@
 <script type="text/javascript" src="{{ static('bower/jquery-validation/dist/jquery.validate.min.js') }}"></script>
 <script type="text/javascript" src="{{ static('bower/dynatable/jquery.dynatable.js') }}"></script>
 
-<script type='text/javascript' src="{{ static('js/adgg.js') }}"></script>
+<script type='text/javascript' src="{{ static('js/badili_dash.js') }}"></script>
 
 <script>
     $(document).ready(function(){

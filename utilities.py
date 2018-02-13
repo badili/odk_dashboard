@@ -2,14 +2,14 @@ import gzip
 import os
 import magic
 
-from io import StringIO as IO
+from io import BytesIO as IO
 from django.http import HttpResponse
 from django.conf import settings
 
 
 def zip_response(json_data):
     gzip_buffer = IO()
-    gzip_file = gzip.GzipFile(mode='wb', compresslevel=6, fileobj=gzip_buffer)
+    gzip_file = gzip.GzipFile(mode='w', compresslevel=6, fileobj=gzip_buffer)
     gzip_file.write(json_data)
     gzip_file.close()
 

@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 from django.conf.urls import url
 
-from . import views
+from odk_dashboard import views
 urlpatterns = [
     url(r'^login$', views.login_page, name='login_page'),
     url(r'^logout$', views.logout_view, name='logout'),

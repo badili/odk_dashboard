@@ -12,7 +12,7 @@ except ImportError:
     from io import StringIO as IO
 
 from django.conf import settings
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
@@ -59,11 +59,6 @@ def login_page(request):
         terminal.tprint(str(e), 'fail')
         page_settings['error'] = "There was an error while authenticating.<br />Please try again and if the error persist, please contact the system administrator"
         return render(request, 'login.html', page_settings)
-
-
-def logout_view(request):
-    logout(request)
-    return show_landing(request)
 
 
 def under_review_page(request):

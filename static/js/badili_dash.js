@@ -132,12 +132,13 @@ function BadiliDash() {
         }
         row.val(newValues, true);
     });
-    $('#test_mappings').on('click', this.validateMappings);
-    $('#confirm_clear_mappings').on('click', this.clearMappings);
-    $('#dry_run').on('click', this.executeProcessingDryRun);
-    $('#confirm_process_mappings').on('click', this.executeDataProcessor);
-    $('#confirm_delete_data').on('click', this.clearProcessedData);
-    $('#confirm_save_edits').on('click', this.saveEditedJson);
+    // $('#test_mappings').on('click', this.validateMappings);
+    // $('#confirm_clear_mappings').on('click', this.clearMappings);
+    // $('#dry_run').on('click', this.executeProcessingDryRun);
+    // $('#confirm_process_mappings').on('click', this.executeDataProcessor);
+    // $('#confirm_delete_data').on('click', this.clearProcessedData);
+    // $('#confirm_save_edits').on('click', this.saveEditedJson);
+    
     $('#confirm_process_submission').unbind('click').on('click', this.processCurSubmission);
     $('#save_sys_settings, #save_db_settings, #save_ona_settings').on('click', this.saveSystemSettings);
     $('#new_form_group').on('click', function(){
@@ -145,6 +146,14 @@ function BadiliDash() {
     });
 
     
+    $(document).on('click', '#confirm_clear_mappings', this.clearMappings);
+    $(document).on('click', '#dry_run', function(){
+        dash.executeProcessingDryRun(true);
+    });
+    $(document).on('click', '#confirm_process_mappings', this.executeDataProcessor);
+    $(document).on('click', '#confirm_delete_data', this.clearProcessedData);
+    $(document).on('click', '#confirm_save_edits', this.saveEditedJson);
+    $(document).on('click', '#test_mappings', this.validateMappings);
     $(document).on('click', '.edit_record', this.viewRawSubmission);
     $(document).on('click', '#form_settings_table .edit_form', this.editFormSettings);
     $(document).on('click', '#save_form_details', this.saveFormSettings);

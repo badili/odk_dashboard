@@ -80,7 +80,7 @@ function BadiliDash() {
     </div>";
     var merged_views_end = "</div>";
 
-    $('#all_forms').on('select', function(event){
+    $(document).on('select', '#all_forms', function(event){
         var args = event.args;
         if (args) {
             // get the form structure
@@ -88,7 +88,7 @@ function BadiliDash() {
         }
     });
 
-    $('#all_tables').on('select', function(event){
+    $(document).on('select', '#all_tables', function(event){
         var args = event.args;
         if (args) {
             // get the form structure
@@ -97,7 +97,7 @@ function BadiliDash() {
     });
 
     //On Global Checkbox Toggle, set all rows' checkbox to checked and toggle _selection values
-    $('#mappings_table').on("change", ".global-checkbox", function() {
+    $(document).on('change', ".global-checkbox", function() {
         var newValues = {};
         if ( $(this).prop("checked") ) {
             newValues._selection = 'True';
@@ -113,7 +113,7 @@ function BadiliDash() {
     });
 
     //On Single Row Checkbox Toggle
-    $('#mappings_table').on('click', '.row-checkbox', function() {
+    $(document).on('click', '.row-checkbox', function() {
         var newValues = {};
         var row = $(this).closest('tr').data('__FooTableRow__');
         if ( $(this).prop('checked') ) {
@@ -132,12 +132,6 @@ function BadiliDash() {
         }
         row.val(newValues, true);
     });
-    // $('#test_mappings').on('click', this.validateMappings);
-    // $('#confirm_clear_mappings').on('click', this.clearMappings);
-    // $('#dry_run').on('click', this.executeProcessingDryRun);
-    // $('#confirm_process_mappings').on('click', this.executeDataProcessor);
-    // $('#confirm_delete_data').on('click', this.clearProcessedData);
-    // $('#confirm_save_edits').on('click', this.saveEditedJson);
     
     $('#confirm_process_submission').unbind('click').on('click', this.processCurSubmission);
     $('#save_sys_settings, #save_db_settings, #save_ona_settings').on('click', this.saveSystemSettings);

@@ -184,7 +184,7 @@ def download_data(request):
     try:
         data = json.loads(request.body)
         # form_id, nodes, d_format, download_type, view_name, uuids=None, update_local_data=True, is_dry_run=True
-        res = parser.fetch_merge_data(data['form_id'], data['nodes[]'], data['format'], data['action'], data['view_name'], None, True, not settings.IS_DRY_RUN)
+        res = parser.fetch_merge_data(data['form_id'], data['nodes[]'], data['format'], data['action'], data['view_name'], None, True, settings.IS_DRY_RUN)
     except KeyError as e:
         terminal.tprint(traceback.format_exc(), 'fail')
         terminal.tprint(str(e), 'fail')
@@ -600,7 +600,7 @@ def refresh_view_data(request):
         form_view = form_view[0]
         odk_form = ODKForm.objects.get(id=form_view.form_id)
         # form_id, nodes, d_format, download_type, view_name, uuids=None, update_local_data=True, is_dry_run=True
-        res = parser.fetch_merge_data(odk_form.form_id, form_view.structure, None, 'submissions', form_view.view_name, None, True, not settings.IS_DRY_RUN)
+        res = parser.fetch_merge_data(odk_form.form_id, form_view.structure, None, 'submissions', form_view.view_name, None, True, settings.IS_DRY_RUN)
 
         return return_json({'error': False, 'message': "The view '%s' has been updated successfully. Current total records %d" % (form_view.view_name, len(res))})
     except Exception as e:

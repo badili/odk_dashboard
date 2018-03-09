@@ -852,7 +852,8 @@ BadiliDash.prototype.submitMappingEdits = function(e){
         values = {
             mapping_id: $editor.find('#mapping_id').val(),
             regex_validator: $editor.find('#regex_validator').val(),
-            is_record_id: $editor.find('[name=is_record_id]:checked').val() == 'yes' ? true : false
+            is_record_id: $editor.find('[name=is_record_id]:checked').val() == 'yes' ? true : false,
+            is_lookup_id: $editor.find('[name=is_lookup_id]:checked').val() == 'yes' ? true : false
         };
 
     $('#spinnermModal').modal('show');

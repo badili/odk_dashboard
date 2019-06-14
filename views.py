@@ -22,7 +22,7 @@ from wsgiref.util import FileWrapper
 
 from vendor.odk_parser import OdkParser
 from vendor.terminal_output import Terminal
-from vendor.models import ODKForm, FormViews
+from vendor.models import ODKForm, FormViews, Profile
 
 import os
 terminal = Terminal()
@@ -36,13 +36,15 @@ def login_page(request):
     try:
         username = request.POST['username']
         password = request.POST['pass']
+        print(username)
+        print(password)
 
         if username is not None:
             user = authenticate(username=username, password=password)
 
             if user is None:
                 terminal.tprint("Couldn't authenticate the user... redirect to login page", 'fail')
-                page_settings['error'] = 'Invalid username or password'
+                page_settings['error'] = settings.SITE_NAME + " could not authenticate you. You entered an invalid username or password"
                 return render(request, 'login.html', page_settings)
             else:
                 terminal.tprint('All ok', 'debug')
@@ -54,6 +56,14 @@ def login_page(request):
         # ask the user to enter the username and/or password
         terminal.tprint('Username/password not defined: %s' % str(e), 'warn')
         page_settings['message'] = "Please enter your username and password"
+        return render(request, 'login.html', page_settings)
+    except Profile.DoesNotExist as e:
+        terminal.tprint(str(e), 'fail')
+        # The user doesn't have a user profile, lets create a minimal one
+        profile = Profile(
+            user=user
+        )
+        profile.save()
         return render(request, 'login.html', page_settings)
     except Exception as e:
         terminal.tprint(str(e), 'fail')
@@ -87,6 +97,7 @@ def download_page(request):
         'page_title': "%s | Downloads" % settings.SITE_NAME,
         'csrf_token': csrf_token,
         'section_title': 'Download Section',
+        'site_name': settings.SITE_NAME,
         'all_forms': json.dumps(all_forms)
     }
     return render(request, 'download.html', page_settings)
@@ -126,6 +137,7 @@ def manage_views(request):
         'page_title': "%s | Manage Generated Views" % settings.SITE_NAME,
         'csrf_token': csrf_token,
         'section_title': 'Manage Views',
+        'site_name': settings.SITE_NAME,
         'all_data': json.dumps(all_data)
     }
     return render(request, 'manage_views.html', page_settings)
@@ -160,6 +172,8 @@ def form_structure(request):
 
     try:
         form_id = int(request.POST['form_id'])
+        if form_id == -1:
+            return HttpResponse(json.dumps({'error': True, 'message': 'Please select a form to get the structure from'}))
         structure = parser.get_form_structure_as_json(form_id)
     except KeyError as e:
         logging.error(traceback.format_exc())
@@ -288,6 +302,7 @@ def manage_mappings(request):
         'db_tables': json.dumps(db_tables),
         'tables_columns': json.dumps(tables_columns),
         'all_forms': json.dumps(all_forms),
+        'site_name': settings.SITE_NAME,
         'mappings': json.dumps(mappings)
     }
     return render(request, 'manage_mappings.html', page_settings)
@@ -370,6 +385,7 @@ def processing_errors(request):
     page_settings = {
         'page_title': "%s | Processing Errors" % settings.SITE_NAME,
         'csrf_token': csrf_token,
+        'site_name': settings.SITE_NAME,
         'section_title': 'Processing Errors'
     }
     return render(request, 'processing_errors.html', page_settings)
@@ -456,6 +472,7 @@ def processing_status(request):
     page_settings = {
         'page_title': "%s | Processing Status" % settings.SITE_NAME,
         'csrf_token': csrf_token,
+        'site_name': settings.SITE_NAME,
         'section_title': 'Processing Status'
     }
     return render(request, 'processing_status.html', page_settings)
@@ -487,6 +504,7 @@ def system_settings(request):
         'page_title': "%s | Home" % settings.SITE_NAME,
         'csrf_token': csrf_token,
         'settings': all_settings,
+        'site_name': settings.SITE_NAME,
         'section_title': 'Manage %s Settings' % settings.SITE_NAME
     }
     return render(request, 'system_settings.html', page_settings)
@@ -514,6 +532,7 @@ def forms_settings(request):
     page_settings = {
         'page_title': "%s | Home" % settings.SITE_NAME,
         'csrf_token': csrf_token,
+        'site_name': settings.SITE_NAME,
         'section_title': 'Manage %s Forms' % settings.SITE_NAME
     }
     return render(request, 'forms_settings.html', page_settings)

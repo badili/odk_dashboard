@@ -36,8 +36,6 @@ def login_page(request):
     try:
         username = request.POST['username']
         password = request.POST['pass']
-        print(username)
-        print(password)
 
         if username is not None:
             user = authenticate(username=username, password=password)

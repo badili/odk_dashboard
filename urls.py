@@ -5,6 +5,7 @@ from django.conf.urls import url
 from odk_dashboard import views
 urlpatterns = [
     url(r'^login$', views.login_page, name='login_page'),
+    url(r'^logout/$', views.user_logout, name='user_logout'),
     url(r'^form_structure/', views.form_structure, name='form_structure'),
     url(r'^update_db/', views.update_db, name='update_db'),
     url(r'^form_structure/', views.form_structure, name='form_structure'),
